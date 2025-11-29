@@ -29,10 +29,16 @@ else
   echo "🔑 SSH key already exists, skipping."
 fi
 
-# --- Python tool installation with pipx ---
-echo "🐍 Installing common Python tools with pipx..."
-pipx install requests || true
+# --- Python libraries (system-wide) ---
+echo "🐍 Installing common Python libraries system-wide..."
+python3 -m pip install --upgrade pip --break-system-packages
+python3 -m pip install requests --break-system-packages
+python3 -m pip install python-dotenv --break-system-packages
+
+# --- Python tools (via pipx) ---
+echo "🛠️ Installing developer tools with pipx..."
 pipx install black || true
 pipx install flake8 || true
+pipx install httpie || true
 
-echo "✅ Base GitHub environment ready with pipx!"
+echo "✅ Base GitHub environment ready with libraries + tools!"
