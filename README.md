@@ -1,9 +1,7 @@
-## 📄 README.md
-
 ```markdown
 # setup_github_environment.sh
 
-A bootstrap script for setting up a consistent GitHub development environment across all your Linux machines.  
+A bootstrap script for setting up a consistent GitHub development environment across Linux machines.  
 This script ensures every device has the same essential tools, Git identity, and SSH configuration so you can seamlessly work on GitHub projects.
 
 ---
@@ -16,9 +14,10 @@ This script ensures every device has the same essential tools, Git identity, and
   - `python3` + `pip`
   - `curl`
   - `code` (Visual Studio Code)
-- Configures your global Git identity:
-  - Name: **Nathan**
-  - Email: **nathanlsmock@protonmail.com**
+- Prompts you for your Git identity:
+  - Name (e.g., "Your Name")
+  - Email (e.g., "you@example.com")
+- Configures Git with those credentials
 - Generates a new SSH key (`ed25519`) if one doesn’t exist
   - Prints the public key so you can add it to GitHub under **Settings → SSH and GPG keys**
 - Upgrades `pip` to the latest version
@@ -29,7 +28,7 @@ This script ensures every device has the same essential tools, Git identity, and
 
 1. Clone this repository:
    ```bash
-   git clone git@github.com:leeroy4000/setup_github_environment.sh.git
+   git clone https://github.com/<your-username>/setup_github_environment.sh.git
    cd setup_github_environment.sh
    ```
 
@@ -53,6 +52,7 @@ Run the script anytime you want to bootstrap a new machine:
 setup_github_environment.sh
 ```
 
+You’ll be prompted for your GitHub name and email.  
 If a new SSH key is generated, copy the printed public key and add it to your GitHub account:
 
 - Go to **GitHub → Settings → SSH and GPG keys → New SSH key**
@@ -63,7 +63,7 @@ If a new SSH key is generated, copy the printed public key and add it to your Gi
 ## 📂 Workflow
 
 - Run this script **once per machine** to set up the base environment.
-- After that, use your project‑specific setup scripts (e.g., `setup_project.sh`) to clone and configure individual repos.
+- After that, use project‑specific setup scripts (e.g., `setup_project.sh`) to clone and configure individual repos.
 
 ---
 
@@ -71,5 +71,5 @@ If a new SSH key is generated, copy the printed public key and add it to your Gi
 
 - Each machine should have its own SSH key for security. GitHub supports multiple keys per account.
 - Once installed in `/usr/local/bin`, you can run `setup_github_environment.sh` from anywhere.
-- This script is designed for Debian/Ubuntu/Mint systems. Adjust package manager commands if using another distro.
+- Designed for Debian/Ubuntu/Mint systems. Adjust package manager commands if using another distro.
 ```
