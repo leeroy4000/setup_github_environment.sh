@@ -1,8 +1,10 @@
 ```markdown
 # setup_github_environment.sh
 
-A bootstrap script for setting up a consistent GitHub development environment across Linux machines.  
-This script ensures every device has the same essential tools, Git identity, and SSH configuration so you can seamlessly work on GitHub projects.
+A bootstrap script for setting up a consistent GitHub development environment
+across Linux machines.  
+This script ensures every device has the same essential tools, Git identity,
+and SSH configuration so you can seamlessly work on GitHub projects.
 
 ---
 
@@ -53,7 +55,8 @@ setup_github_environment.sh
 ```
 
 You’ll be prompted for your GitHub name and email.  
-If a new SSH key is generated, copy the printed public key and add it to your GitHub account:
+If a new SSH key is generated, copy the printed public key and add it 
+to your GitHub account:
 
 - Go to **GitHub → Settings → SSH and GPG keys → New SSH key**
 - Paste the key and give it a label (e.g., "Mint Laptop")
@@ -63,7 +66,8 @@ If a new SSH key is generated, copy the printed public key and add it to your Gi
 ## 📂 Workflow
 
 - Run this script **once per machine** to set up the base environment.
-- After that, use project‑specific setup scripts (e.g., `setup_project.sh`) to clone and configure individual repos.
+- After that, use project‑specific setup scripts (e.g., `setup_project.sh`)
+  to clone and configure individual repos.
 
 ---
 
