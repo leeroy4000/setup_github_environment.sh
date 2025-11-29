@@ -7,7 +7,8 @@ echo "🚀 Bootstrapping GitHub environment..."
 sudo apt update && sudo apt upgrade -y
 
 # --- Install essentials ---
-sudo apt install -y git python3 python3-pip curl code
+sudo apt install -y git python3 python3-pip python3-full curl pipx
+pipx ensurepath
 
 # --- Ask for Git identity ---
 read -p "Enter your GitHub display name: " GIT_NAME
@@ -28,7 +29,10 @@ else
   echo "🔑 SSH key already exists, skipping."
 fi
 
-# --- Upgrade pip ---
-python3 -m pip install --upgrade pip
+# --- Python tool installation with pipx ---
+echo "🐍 Installing common Python tools with pipx..."
+pipx install requests || true
+pipx install black || true
+pipx install flake8 || true
 
-echo "✅ Base GitHub environment ready!"
+echo "✅ Base GitHub environment ready with pipx!"
