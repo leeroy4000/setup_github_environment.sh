@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -e  # exit on error
 
-# === GLOBAL CONFIG ===
-GIT_EMAIL="nathanlsmock@protonmail.com"
-GIT_NAME="Nathan"
-
 echo "🚀 Bootstrapping GitHub environment..."
 
 # --- Update system ---
@@ -12,6 +8,10 @@ sudo apt update && sudo apt upgrade -y
 
 # --- Install essentials ---
 sudo apt install -y git python3 python3-pip curl code
+
+# --- Ask for Git identity ---
+read -p "Enter your GitHub display name: " GIT_NAME
+read -p "Enter your GitHub email address: " GIT_EMAIL
 
 # --- Configure Git identity ---
 git config --global user.name "$GIT_NAME"
