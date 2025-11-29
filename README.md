@@ -1,10 +1,8 @@
 ```markdown
 # setup_github_environment.sh
 
-A bootstrap script for setting up a consistent GitHub development environment
-across Linux machines.  
-This script ensures every device has the same essential tools, Git identity,
-and SSH configuration so you can seamlessly work on GitHub projects.
+A bootstrap script for setting up a consistent GitHub development environment across Linux machines.  
+This script ensures every device has the same essential tools, Git identity, SSH configuration, Python libraries, and developer tools so you can seamlessly work on GitHub projects.
 
 ---
 
@@ -14,15 +12,22 @@ and SSH configuration so you can seamlessly work on GitHub projects.
 - Installs essential tools:
   - `git`
   - `python3` + `pip`
+  - `python3-full`
   - `curl`
-  - `code` (Visual Studio Code)
+  - `pipx`
 - Prompts you for your Git identity:
   - Name (e.g., "Your Name")
   - Email (e.g., "you@example.com")
 - Configures Git with those credentials
 - Generates a new SSH key (`ed25519`) if one doesn’t exist
   - Prints the public key so you can add it to GitHub under **Settings → SSH and GPG keys**
-- Upgrades `pip` to the latest version
+- Installs common Python **libraries system‑wide** (using `--break-system-packages`):
+  - `requests`
+  - `python-dotenv`
+- Installs common Python **developer tools globally** with `pipx`:
+  - `black`
+  - `flake8`
+  - `httpie`
 
 ---
 
@@ -30,7 +35,7 @@ and SSH configuration so you can seamlessly work on GitHub projects.
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/leeroy4000/setup_github_environment.sh.git
+   git clone https://github.com/<your-username>/setup_github_environment.sh.git
    cd setup_github_environment.sh
    ```
 
@@ -55,8 +60,7 @@ setup_github_environment.sh
 ```
 
 You’ll be prompted for your GitHub name and email.  
-If a new SSH key is generated, copy the printed public key and add it 
-to your GitHub account:
+If a new SSH key is generated, copy the printed public key and add it to your GitHub account:
 
 - Go to **GitHub → Settings → SSH and GPG keys → New SSH key**
 - Paste the key and give it a label (e.g., "Mint Laptop")
@@ -65,15 +69,16 @@ to your GitHub account:
 
 ## 📂 Workflow
 
-- Run this script **once per machine** to set up the base environment.
-- After that, use project‑specific setup scripts (e.g., `setup_project.sh`)
-  to clone and configure individual repos.
+- Run this script **once per machine** to set up the base environment.  
+- After that, use project‑specific setup scripts (e.g., `setup_project.sh`) to clone and configure individual repos.  
 
 ---
 
 ## ✅ Notes
 
-- Each machine should have its own SSH key for security. GitHub supports multiple keys per account.
-- Once installed in `/usr/local/bin`, you can run `setup_github_environment.sh` from anywhere.
+- Each machine should have its own SSH key for security. GitHub supports multiple keys per account.  
+- Libraries (`requests`, `python-dotenv`) are installed system‑wide with `pip --break-system-packages`.  
+- Developer tools (`black`, `flake8`, `httpie`) are installed with `pipx` for safe global usage.  
+- Once installed in `/usr/local/bin`, you can run `setup_github_environment.sh` from anywhere.  
 - Designed for Debian/Ubuntu/Mint systems. Adjust package manager commands if using another distro.
 ```
