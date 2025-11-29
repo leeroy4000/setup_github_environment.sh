@@ -30,7 +30,7 @@ and SSH configuration so you can seamlessly work on GitHub projects.
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/<your-username>/setup_github_environment.sh.git
+   git clone https://github.com/leeroy4000/setup_github_environment.sh.git
    cd setup_github_environment.sh
    ```
 
