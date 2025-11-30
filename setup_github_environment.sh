@@ -1,122 +1,52 @@
 #!/usr/bin/env bash
 set -e  # exit on error
 
-echo "🚀 GitHub Project Setup"
+echo "🚀 Setting up GitHub development environment"
 
-# --- Ensure GitHub CLI is installed ---
-if ! command -v gh &> /dev/null; then
-  echo "📦 Installing GitHub CLI (gh)..."
-  sudo apt update
-  sudo apt install -y gh
-  echo "✅ GitHub CLI installed."
+# --- Ensure system is up to date ---
+sudo apt update
+sudo apt upgrade -y
+
+# --- Install core packages ---
+sudo apt install -y git curl python3 python3-pip python3-venv pipx gh
+
+# --- Ensure pipx is on PATH ---
+python3 -m pipx ensurepath
+
+# --- Install common Python libraries system-wide ---
+echo "🐍 Installing common Python libraries system-wide..."
+# ⚠️ Do NOT upgrade pip here — leave it managed by apt
+python3 -m pip install --break-system-packages \
+    requests \
+    beautifulsoup4 \
+    pandas \
+    numpy \
+    lxml \
+    rich \
+    mkdocs \
+    mkdocs-get-deps
+
+# --- Install developer tools globally via pipx ---
+echo "🛠️ Installing developer tools globally via pipx..."
+pipx install black
+pipx install flake8
+pipx install pylint
+pipx install virtualenv
+
+# --- Configure Git defaults ---
+echo "⚙️ Configuring Git defaults..."
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+git config --global credential.helper store
+
+# --- SSH key setup ---
+if [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
+  echo "🔑 Generating new SSH key..."
+  ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)" -f "$HOME/.ssh/id_ed25519" -N ""
+  echo "✅ SSH key generated. Add the following public key to GitHub:"
+  cat "$HOME/.ssh/id_ed25519.pub"
 else
-  echo "✅ GitHub CLI already installed."
+  echo "✅ SSH key already exists."
 fi
 
-read -p "Is this a new project (yes/no)? " NEW_PROJECT
-
-if [[ "$NEW_PROJECT" == "yes" ]]; then
-  # --- New project setup ---
-  read -p "Enter your GitHub username: " GITHUB_USER
-  read -p "Enter the new repository name: " REPO_NAME
-  read -p "Enter a short project description: " DESCRIPTION
-
-  WORK_DIR="$HOME/${REPO_NAME}"
-
-  echo "📂 Creating new project directory..."
-  mkdir -p "$WORK_DIR"
-  cd "$WORK_DIR"
-
-  echo "📂 Initializing Git repo..."
-  git init
-  echo "# ${REPO_NAME}" > README.md
-  echo "${DESCRIPTION}" >> README.md
-  touch .gitignore
-  echo "venv/" >> .gitignore
-  echo "__pycache__/" >> .gitignore
-
-  git add .
-  git commit -m "Initial commit"
-  git branch -M main
-
-  echo "🔗 Creating PRIVATE repo on GitHub via gh..."
-  gh repo create "${GITHUB_USER}/${REPO_NAME}" --private --source=. --remote=origin --push
-
-  # --- Create VS Code workspace file ---
-  cat > "${WORK_DIR}/${REPO_NAME}.code-workspace" <<EOF
-{
-  "folders": [
-    {
-      "path": "."
-    }
-  ],
-  "settings": {
-    "python.defaultInterpreterPath": "python3",
-    "editor.formatOnSave": true,
-    "files.exclude": {
-      "**/__pycache__": true,
-      "**/*.pyc": true
-    }
-  }
-}
-EOF
-
-  echo "💻 Launching VS Code..."
-  code "${WORK_DIR}/${REPO_NAME}.code-workspace"
-
-  echo "✅ New private project created, pushed, and opened in VS Code!"
-
-else
-  # --- Existing project setup ---
-  read -p "Enter your GitHub username: " GITHUB_USER
-  read -p "Enter the repository name: " REPO_NAME
-
-  REPO_URL="git@github.com:${GITHUB_USER}/${REPO_NAME}.git"
-  WORK_DIR="$HOME/${REPO_NAME}"
-
-  echo "🚀 Setting up existing project $REPO_NAME..."
-
-  if [ -d "$WORK_DIR/.git" ]; then
-    echo "📂 Repo already exists, pulling latest..."
-    cd "$WORK_DIR"
-    git pull
-  else
-    echo "📂 Cloning repo..."
-    git clone "$REPO_URL" "$WORK_DIR"
-    cd "$WORK_DIR"
-  fi
-
-  # --- Install Python dependencies (system-wide) ---
-  if [ -f "requirements.txt" ]; then
-    echo "🐍 Installing Python dependencies system-wide..."
-    python3 -m pip install -r requirements.txt --break-system-packages
-  else
-    echo "⚠️ No requirements.txt found, skipping."
-  fi
-
-  # --- Create VS Code workspace file if missing ---
-  if [ ! -f "${WORK_DIR}/${REPO_NAME}.code-workspace" ]; then
-    cat > "${WORK_DIR}/${REPO_NAME}.code-workspace" <<EOF
-{
-  "folders": [
-    {
-      "path": "."
-    }
-  ],
-  "settings": {
-    "python.defaultInterpreterPath": "python3",
-    "editor.formatOnSave": true,
-    "files.exclude": {
-      "**/__pycache__": true,
-      "**/*.pyc": true
-    }
-  }
-}
-EOF
-  fi
-
-  echo "💻 Launching VS Code..."
-  code "${WORK_DIR}/${REPO_NAME}.code-workspace"
-
-  echo "✅ Existing project setup complete and opened in VS Code!"
-fi
+echo "🎉 Environment setup complete!"
