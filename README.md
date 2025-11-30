@@ -1,84 +1,84 @@
+
 ```markdown
 # setup_github_environment.sh
 
-A bootstrap script for setting up a consistent GitHub development environment across Linux machines.  
-This script ensures every device has the same essential tools, Git identity, SSH configuration, Python libraries, and developer tools so you can seamlessly work on GitHub projects.
+A bootstrap script for setting up a reproducible GitHub development environment on Debian/Ubuntu/Mint systems.  
+This script prepares your machine with Git, Python, pipx, common libraries, developer tools, and SSH keys for GitHub.
 
 ---
 
 ## 🚀 What the Script Does
 
-- Updates system packages (`apt update && apt upgrade`)
-- Installs essential tools:
-  - `git`
-  - `python3` + `pip`
-  - `python3-full`
-  - `curl`
-  - `pipx`
-- Prompts you for your Git identity:
-  - Name (e.g., "Your Name")
-  - Email (e.g., "you@example.com")
-- Configures Git with those credentials
-- Generates a new SSH key (`ed25519`) if one doesn’t exist
-  - Prints the public key so you can add it to GitHub under **Settings → SSH and GPG keys**
-- Installs common Python **libraries system‑wide** (using `--break-system-packages`):
-  - `requests`
-  - `python-dotenv`
-- Installs common Python **developer tools globally** with `pipx`:
-  - `black`
-  - `flake8`
-  - `httpie`
+- Updates system packages (`apt update && apt upgrade`).
+- Installs core tools: `git`, `curl`, `python3`, `python3-pip`, `python3-venv`, `pipx`, `gh` (GitHub CLI).
+- Ensures `pipx` is on your PATH (`pipx ensurepath`).
+- Installs common Python libraries system‑wide (without upgrading pip):
+  - `requests`, `beautifulsoup4`, `pandas`, `numpy`, `lxml`, `rich`, `mkdocs`, `mkdocs-get-deps`
+- Installs developer tools globally via **pipx** (user scope):
+  - `black`, `flake8`, `pylint`, `virtualenv`
+- Configures Git defaults:
+  - Default branch = `main`
+  - Pull strategy = merge (not rebase)
+  - Credential helper = store
+- Generates an SSH key (`ed25519`) if one doesn’t already exist, and prints the public key for adding to GitHub.
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Requirements
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/<your-username>/setup_github_environment.sh.git
-   cd setup_github_environment.sh
-   ```
+- Debian/Ubuntu/Mint system with `apt`.
+- GitHub CLI (`gh`) will be installed automatically if missing.
+- You must authenticate once with GitHub CLI:
+  ```bash
+  gh auth login
+  ```
+  - Choose GitHub.com
+  - Authenticate with SSH
+  - Store credentials
 
-2. Make the script executable:
+---
+
+## ▶️ Installation
+
+1. Save the script as `setup_github_environment.sh`.
+2. Make it executable:
    ```bash
    chmod +x setup_github_environment.sh
    ```
-
-3. Move it to `/usr/local/bin` so it’s available system‑wide:
+3. Move it into `/usr/local/bin`:
    ```bash
    sudo mv setup_github_environment.sh /usr/local/bin/setup_github_environment.sh
    ```
 
----
-
-## ▶️ Usage
-
-Run the script anytime you want to bootstrap a new machine:
-
+Now you can run it from anywhere with:
 ```bash
 setup_github_environment.sh
 ```
 
-You’ll be prompted for your GitHub name and email.  
-If a new SSH key is generated, copy the printed public key and add it to your GitHub account:
+---
 
-- Go to **GitHub → Settings → SSH and GPG keys → New SSH key**
-- Paste the key and give it a label (e.g., "Mint Laptop")
+## 📂 Notes on Pip and Pipx
+
+- **pip is left under apt control**. The script does **not** upgrade pip itself; it only installs libraries system‑wide with `--break-system-packages`. Pip will upgrade cleanly when Mint/Ubuntu updates packages.
+- **pipx installs are user‑scoped**. Do not run pipx with `sudo`. Tools are installed into `~/.local/share/pipx/venvs/...` and linked into `~/.local/bin`, which is already in PATH.
+- If you rerun `pipx install` for a tool, you may see:
+  ```
+  'tool' already seems to be installed. Pass '--force' to force installation.
+  ```
+  Use `--force` to refresh the install if needed.
 
 ---
 
-## 📂 Workflow
+## ✅ Workflow
 
-- Run this script **once per machine** to set up the base environment.  
-- After that, use project‑specific setup scripts (e.g., `setup_project.sh`) to clone and configure individual repos.  
+Run this script once per machine to prepare your environment.  
+Afterwards, use the **project setup script** (`setup_github_project.sh`) for individual repos.  
 
----
-
-## ✅ Notes
-
-- Each machine should have its own SSH key for security. GitHub supports multiple keys per account.  
-- Libraries (`requests`, `python-dotenv`) are installed system‑wide with `pip --break-system-packages`.  
-- Developer tools (`black`, `flake8`, `httpie`) are installed with `pipx` for safe global usage.  
-- Once installed in `/usr/local/bin`, you can run `setup_github_environment.sh` from anywhere.  
-- Designed for Debian/Ubuntu/Mint systems. Adjust package manager commands if using another distro.
+Together, these scripts give you:
+- A stable, reproducible environment across machines.
+- Private repos by default, with SSH authentication.
+- Developer tools (`black`, `flake8`, `pylint`, `virtualenv`) globally available via pipx.
+- Common Python libraries installed system‑wide for immediate use.
 ```
+
+---
